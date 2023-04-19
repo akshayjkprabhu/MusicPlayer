@@ -29,7 +29,7 @@ fun MainScreen() {
     NavHost(
         navController = navController,
         route = GraphRoute.Root.route,
-        startDestination = GraphRoute.OnBoarding.route
+        startDestination = GraphRoute.DashBoard.route
     ) {
 
         composable(

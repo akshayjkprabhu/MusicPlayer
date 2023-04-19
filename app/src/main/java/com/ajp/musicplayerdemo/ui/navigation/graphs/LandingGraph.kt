@@ -1,55 +1,106 @@
 package com.ajp.musicplayerdemo.ui.navigation.graphs
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraphBuilder
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.ajp.musicplayerdemo.ui.navigation.GraphRoute
-import com.ajp.musicplayerdemo.ui.navigation.NavigationCommand
+import kotlinx.coroutines.withContext
 
 
 @Composable
 fun LandingGraph(navHostController: NavHostController = rememberNavController()) {
-    NavHost(
-        navController = navHostController,
-        route = GraphRoute.Landing.route,
-        startDestination = GraphRoute.DashBoard.route
-    ) {
-
-        dashBoardGraph()
-        profileGraph()
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    // TODO have one effect passed from outside which can be handled here
+    var updateDrawerState by remember {
+        mutableStateOf(true)
     }
-}
 
-fun NavGraphBuilder.profileGraph() {
-    navigation(
-        startDestination = NavigationCommand.Profile.destination,
-        route = GraphRoute.Profile.route
-    ) {
-        // todo add screen sets coming under profile sections
-        // such as favorites
-        // saved
-        // playlists
-        // settings
-
-        composable(route = NavigationCommand.Profile.destination) {
-
+    LaunchedEffect(key1 = updateDrawerState) {
+        withContext(scope.coroutineContext) {
+            val drawerState = scaffoldState.drawerState
+            if (drawerState.isOpen) {
+                drawerState.close()
+            } else {
+                drawerState.open()
+            }
         }
     }
 
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = { bottomNavigation() },
+        topBar = {
+            landingScreenToolBar {
+                updateDrawerState = updateDrawerState.not()
+            }
+        },
+        drawerContent = { appDrawer() },
+        scaffoldState = scaffoldState
+    ) {
+        NavHost(
+            navController = navHostController,
+            route = GraphRoute.Landing.route,
+            startDestination = GraphRoute.DashBoard.route
+        ) {
+            dashBoardGraph(it)
+            profileGraph(it)
+        }
+    }
 }
 
-fun NavGraphBuilder.dashBoardGraph() {
+@Composable
+fun ColumnScope.appDrawer() {
+    TextButton(onClick = { /*TODO*/ }) {
 
-    navigation(
-        startDestination = NavigationCommand.Dashboard.destination,
-        route = GraphRoute.DashBoard.route
-    ) {
-        composable(NavigationCommand.Dashboard.destination) {
-            // Add a dashboard screen here
+    }
+}
+
+@Composable
+private fun landingScreenToolBar(toggleDrawer: () -> Unit) {
+    TopAppBar(modifier = Modifier.fillMaxWidth()) {
+
+        IconButton(onClick = toggleDrawer) {
+            Icon(Icons.Default.Menu, contentDescription = null)
+        }
+
+        Text(
+            text = "Feel It",
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center
+        )
+
+        IconButton(onClick = { }) {
+            Icon(Icons.Default.Search, contentDescription = null)
+
+        }
+
+    }
+}
+
+@Composable
+private fun bottomNavigation() {
+    BottomAppBar(Modifier.fillMaxWidth()) {
+        IconButton(onClick = { }, Modifier.weight(1f)) {
+            Icon(Icons.Default.Home, contentDescription = null)
+        }
+        IconButton(onClick = { }, Modifier.weight(1f)) {
+            Icon(Icons.Default.Search, contentDescription = null)
+        }
+        IconButton(onClick = { }, Modifier.weight(1f)) {
+            Icon(Icons.Default.Settings, contentDescription = null)
         }
     }
 }

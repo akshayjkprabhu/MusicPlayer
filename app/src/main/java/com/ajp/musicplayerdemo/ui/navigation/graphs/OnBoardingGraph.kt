@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ajp.musicplayerdemo.ui.destinations.GuidedTourDestination
-import com.ajp.musicplayerdemo.ui.destinations.SplashDestination
+import com.ajp.musicplayerdemo.features.onboarding.GuidedTourDestination
+import com.ajp.musicplayerdemo.features.splash.SplashDestination
 import com.ajp.musicplayerdemo.ui.navigation.GraphRoute
 import com.ajp.musicplayerdemo.ui.navigation.NavigationCommand
 

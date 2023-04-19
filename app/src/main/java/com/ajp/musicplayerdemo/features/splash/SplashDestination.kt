@@ -1,4 +1,4 @@
-package com.ajp.musicplayerdemo.ui.destinations
+package com.ajp.musicplayerdemo.features.splash
 
 import androidx.compose.runtime.Composable
 
